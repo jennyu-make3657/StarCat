@@ -22,11 +22,8 @@ public class KeyUI : MonoBehaviour
     private Coroutine blink; //깜빡임
 
     private bool waitingForKey = false; //새로운 키 입력 기다리는지 확인
-
+    private KeyManager keyManager;
     private TextMeshProUGUI kkey;
-
-
-
     private void Start()
     {
 
@@ -39,8 +36,43 @@ public class KeyUI : MonoBehaviour
         guideText.SetActive(false);
 
         keyText.SetActive(true);
-        
+        StartCoroutine(InitKeyUI());
+
     }
+    private IEnumerator InitKeyUI()
+    {
+        yield return null;
+        if (SettingManager.Instance != null)
+        {
+            keyManager = SettingManager.Instance.keyManager;
+        }
+        UpdateUITextFromKeyManager();
+    }
+
+    private void UpdateUITextFromKeyManager()
+    {
+        if (SettingManager.Instance == null || SettingManager.Instance.keyManager == null)
+        {
+            Debug.LogError("[KeyUI] SettingManager 또는 KeyManager를 찾을 수 없습니다!");
+            return;
+        }
+        KeyManager keyManager = SettingManager.Instance.keyManager;
+        KeyCode currentKey = KeyCode.None;
+        switch (keyType)
+        {
+            case KeyType.Up: currentKey = keyManager.upKey; break;
+            case KeyType.Down: currentKey = keyManager.downKey; break;
+            case KeyType.Left: currentKey = keyManager.leftKey; break;
+            case KeyType.Right: currentKey = keyManager.rightKey; break;
+            case KeyType.SpecialAction: currentKey = keyManager.specialActionKey; break;
+            case KeyType.Confirm: currentKey = keyManager.confirmKey; break;
+            case KeyType.SkipPause: currentKey = keyManager.skipPauseKey; break;
+        }
+
+        UpdateKeyTextDisplay(currentKey);
+    }
+
+    
 
     private void Update()
     {
@@ -60,57 +92,73 @@ public class KeyUI : MonoBehaviour
 
     private void SaveNewKey(KeyCode newKey)
     {
-        switch(keyType)
+        if (keyManager == null)
         {
+            Debug.LogError("[KeyUI] KeyManager를 찾을 수 없습니다!");
+            waitingForKey = false;
+            HideGuideText();
+            return;
+        }
+
+       
+
+
+        switch (keyType)
+        {
+
             case KeyType.Up:
-                KeyManager.Instance.upKey = newKey;
+                keyManager.upKey = newKey;
+                PlayerPrefs.SetString("UP", newKey.ToString());
                 break;
 
             case KeyType.Down:
-                KeyManager.Instance.downKey=newKey;
+                keyManager.downKey = newKey;
+                PlayerPrefs.SetString("DOWN", newKey.ToString());
                 break;
-            
+
             case KeyType.Left:
-                KeyManager.Instance.leftKey=newKey;
+                keyManager.leftKey = newKey;
+                PlayerPrefs.SetString("LEFT", newKey.ToString());
                 break;
 
             case KeyType.Right:
-                KeyManager.Instance.rightKey=newKey;
+                keyManager.rightKey = newKey;
+                PlayerPrefs.SetString("RIGHT", newKey.ToString());
                 break;
-            
+
             case KeyType.SpecialAction:
-                KeyManager.Instance.specialActionKey=newKey;
+                keyManager.specialActionKey = newKey;
+                PlayerPrefs.SetString("SPECIALACTION", newKey.ToString());
                 break;
-            
+
             case KeyType.Confirm:
-                KeyManager.Instance.confirmKey=newKey;
+                keyManager.confirmKey = newKey;
+                PlayerPrefs.SetString("CONFIRM", newKey.ToString());
                 break;
-            
+
             case KeyType.SkipPause:
-                KeyManager.Instance.skipPauseKey=newKey;
+                keyManager.skipPauseKey = newKey;
+                PlayerPrefs.SetString("SKIPPAUSE", newKey.ToString());
                 break;
-            
+
 
         }
-        if (newKey == KeyCode.Escape)
-    {
-        kkey.text = "ESC";
-    }
-    else if (newKey == KeyCode.Return)
-    {
-        kkey.text = "ENTER";
-    }
-    else if (newKey == KeyCode.Space)
-    {
-        kkey.text = "SPACE BAR";
-    }
-    else
-    {
-        kkey.text = newKey.ToString();
-    }
-        waitingForKey=false;
+        PlayerPrefs.Save();
+        UpdateKeyTextDisplay(newKey);
+        waitingForKey = false;
         HideGuideText();
     }
+
+    private void UpdateKeyTextDisplay(KeyCode key)
+    {
+        if (kkey == null) return;
+
+        if (key == KeyCode.Escape) kkey.text = "ESC";
+        else if (key == KeyCode.Return) kkey.text = "ENTER";
+        else if (key == KeyCode.Space) kkey.text = "SPACE BAR";
+        else kkey.text = key.ToString();
+    }
+
 
     // 버튼 누르면 실행
     public void ShowGuideText()

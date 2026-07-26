@@ -18,20 +18,24 @@ public class KeyManager : MonoBehaviour
 
     public KeyCode specialActionKey = KeyCode.Space;
     public KeyCode confirmKey = KeyCode.Return;
-    public KeyCode skipPauseKey= KeyCode.Escape;
+    public KeyCode skipPauseKey = KeyCode.Escape;
     private void Awake()
     {
-        Instance=this;
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+        // 싱글톤 패턴 설정
+        if (Instance == null)
+        {
+            Instance = this;
+            // 씬이 변경되어도 키 매니저 파괴 방지 (필요 시 주석 해제)
+            // DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        }
+
+
     }
 }
+
+    

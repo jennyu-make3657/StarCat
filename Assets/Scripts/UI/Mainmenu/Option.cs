@@ -17,17 +17,17 @@ public class Option : MonoBehaviour
     public TextMeshProUGUI resolutionText;
 
     private Resolution[] resolutions;
-    private int currentResolutionIndex = 2;
+    private int currentResolutionIndex = 2; //1920*1080 기본값 (2)
+
+    private void Awake()
+    {
+        SetupResolutions();
+    }
 
     void Start()
     {
-        SetupResolutions();
-
-        Screen.fullScreen = true;
-
-        if (fullscreenToggle != null)
-            fullscreenToggle.isOn = true;
-
+        // Option 스스로 화면 상태나 토글을 건드리는 코드를 삭제
+        // 설정 적용과 UI 세팅은 SettingManager가 LoadSetting()할 때 완벽하게 처리
         UpdateResolutionText();
     }
 
@@ -43,7 +43,8 @@ public class Option : MonoBehaviour
             new Resolution { width = 1920, height = 1080 }
         };
 
-        currentResolutionIndex = 2;
+        //currentResolutionIndex = 2;
+        
     }
 
     public void OpenOption()
@@ -118,7 +119,16 @@ public class Option : MonoBehaviour
 
     public void SetFullscreen(bool isFullscreen)
     {
+        //PlayerPrefs에 변경된 값을 저장하도록 수정,토글 스위치 상태 업데이트(isOn변수 값을 직접 변경하는 대신 토글만 업데이트)
         Screen.fullScreen = isFullscreen;
+        if (fullscreenToggle != null && fullscreenToggle.isOn != isFullscreen)
+        {
+            fullscreenToggle.SetIsOnWithoutNotify(isFullscreen);
+        }
+        PlayerPrefs.SetInt("FullScreen",isFullscreen ? 1 : 0);
+
+        PlayerPrefs.Save();
+
     }
 
     public void ResolutionLeft()
@@ -154,6 +164,8 @@ public class Option : MonoBehaviour
         Screen.SetResolution(res.width, res.height, Screen.fullScreen);
 
         UpdateResolutionText();
+        PlayerPrefs.SetInt("Resolution", currentResolutionIndex); //현재 변경된 해상도 인덱스를 PlayerPrefs에 저장
+        PlayerPrefs.Save();
     }
 
     void UpdateResolutionText()
@@ -169,5 +181,13 @@ public class Option : MonoBehaviour
         resolutionText.text =
             resolutions[currentResolutionIndex].width + " x " +
             resolutions[currentResolutionIndex].height;
+    }
+    // SetResolutionIndex 메서드를 추가하여 SettingManager가 PlayerPrefs에서 불러온 해상도 값을 Option.cs에 적용
+    public void SetResolutionIndex(int index)
+    {
+        SetupResolutions();
+        currentResolutionIndex = Mathf.Clamp(index, 0, resolutions.Length - 1);
+        
+        ApplyResolution();
     }
 }
