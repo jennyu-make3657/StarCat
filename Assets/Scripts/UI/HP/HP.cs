@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class HP : MonoBehaviour
 {
+    public Image damageImage;
+    public float damageEffectTime = 0.5f;
+    private Coroutine damageEffectCoroutine;
+
     [Header("스테이지 번호")]
     public int stagenumber = 1;
 
@@ -32,9 +36,18 @@ public class HP : MonoBehaviour
     {
         SetStageHeart(); //스테이지 번호 보고 사용할 하트 정하기
 
-        currentHP = maxHP; 
+        currentHP = maxHP;
 
         UpdateHeart();
+
+        if (damageImage != null)
+        {
+            Color effectColor = damageImage.color;
+            effectColor.a = 0f;
+            damageImage.color = effectColor;
+
+            damageImage.raycastTarget = false;
+        }
     }
 
     void Update()
@@ -58,7 +71,7 @@ public class HP : MonoBehaviour
         int stageIndex = stagenumber - 1;
 
         currentheart = heartsprites[stageIndex];
-        }
+    }
 
     public void TakeDamage(int damage)
     {
@@ -81,7 +94,44 @@ public class HP : MonoBehaviour
             currentHP = 0;
         }
 
+        ShowDamageEffect();
+
         StartCoroutine(DamageHeartRoutine(previousHP, currentHP));
+    }
+
+    void ShowDamageEffect()
+    {
+        if (damageEffectCoroutine != null)
+        {
+            StopCoroutine(damageEffectCoroutine);
+        }
+
+        damageEffectCoroutine = StartCoroutine(DamageEffectRoutine());
+    }
+
+    IEnumerator DamageEffectRoutine()
+    {
+        Color effectColor = damageImage.color;
+
+        effectColor.a = 1f;
+        damageImage.color = effectColor;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < damageEffectTime)
+        {
+            elapsedTime += Time.unscaledDeltaTime;
+
+            effectColor.a = 1f - (elapsedTime / damageEffectTime);
+            damageImage.color = effectColor;
+
+            yield return null;
+        }
+
+        effectColor.a = 0f;
+        damageImage.color = effectColor;
+
+        damageEffectCoroutine = null;
     }
 
     IEnumerator DamageHeartRoutine(int previousHP, int newHP) //흔들고 회색하트로 바꾸기
