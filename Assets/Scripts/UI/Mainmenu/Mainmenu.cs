@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Mainmenu : MonoBehaviour
 {
@@ -57,9 +58,17 @@ public class Mainmenu : MonoBehaviour
 
         selectChapter = chapterNumber;
         AA();
+        LoadSelectChapeterScene(chapterNumber);
 
     }
 
+    void LoadSelectChapeterScene(int chapterNumber)
+    {
+        // Load the scene corresponding to the selected chapter
+        // Example: SceneManager.LoadScene("Chapter" + chapterNumber);
+        string sceneName = "Stage" + chapterNumber; //우리가 챕터를 Stage1, Stage2, Stage3... 이런식으로 만들었기 때문에 이렇게 씀 Chapter 1이 아니라
+        SceneManager.LoadScene(sceneName);
+    }
 
     void AA()
     {
