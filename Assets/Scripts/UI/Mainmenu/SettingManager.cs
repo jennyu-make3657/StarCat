@@ -102,15 +102,37 @@ public class SettingManager : MonoBehaviour
             Debug.LogError("KeyManager가 연결되지 않았습니다.");
             return;
         }
-        keyManager.upKey = ParseKey(UP_KEY, KeyCode.W);
-        keyManager.downKey = ParseKey(DOWN_KEY, KeyCode.S);
-        keyManager.leftKey = ParseKey(LEFT_KEY, KeyCode.A);
-        keyManager.rightKey = ParseKey(RIGHT_KEY, KeyCode.D);
+        keyManager.upKey = ParseKey(UP_KEY, KeyCode.UpArrow);
+        keyManager.downKey = ParseKey(DOWN_KEY, KeyCode.DownArrow);
+        keyManager.leftKey = ParseKey(LEFT_KEY, KeyCode.LeftArrow);
+        keyManager.rightKey = ParseKey(RIGHT_KEY, KeyCode.RightArrow);
+
         keyManager.specialActionKey = ParseKey(SPECIAL_KEY, KeyCode.Space);
         keyManager.confirmKey = ParseKey(CONFIRM_KEY, KeyCode.Return);
         keyManager.skipPauseKey = ParseKey(SKIP_KEY, KeyCode.Escape);
     }
-
+    private void ResetKeySetting()
+    {
+        PlayerPrefs.DeleteKey(UP_KEY);
+        PlayerPrefs.DeleteKey(DOWN_KEY);
+        PlayerPrefs.DeleteKey(LEFT_KEY);
+        PlayerPrefs.DeleteKey(RIGHT_KEY);
+        PlayerPrefs.DeleteKey(SPECIAL_KEY);
+        PlayerPrefs.DeleteKey(CONFIRM_KEY);
+        PlayerPrefs.DeleteKey(SKIP_KEY);
+        PlayerPrefs.Save();
+        LoadControl();
+        KeyUI[] keyUIs = FindObjectsByType<KeyUI>(FindObjectsSortMode.None);
+        foreach (KeyUI ui in keyUIs)
+        {
+            // KeyUI의 Start 코루틴 처럼 UI 텍스트 다시 불러오기
+            ui.StartCoroutine("InitKeyUI");
+        }
+    }
+    public void RequestResetKeys()
+    {
+        ResetKeySetting();
+    }
     private KeyCode ParseKey(string keyName, KeyCode defaultKey)
     {
         string keyString = PlayerPrefs.GetString(keyName, defaultKey.ToString());

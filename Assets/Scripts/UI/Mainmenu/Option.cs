@@ -101,6 +101,14 @@ public class Option : MonoBehaviour
         audioPanel.SetActive(false);
     }
 
+    public void ResetControlKeys()
+    {
+        if (SettingManager.Instance != null)
+        {
+            SettingManager.Instance.RequestResetKeys();
+        }
+    }
+
     public void OpenAudio()
     {
         menuPanel.SetActive(false);

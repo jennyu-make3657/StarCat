@@ -78,12 +78,15 @@ public class KeyUI : MonoBehaviour
     {
         if(!waitingForKey)
             return;
-        
-        foreach(KeyCode key in System.Enum.GetValues(typeof(KeyCode))) //키 확인
+
+        foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
         {
-            //새로 선택한 키 찾으면 변수로 전달
-            if(Input.GetKeyDown(key))
+            if (Input.GetKeyDown(key))
             {
+                // 마우스 클릭(Mouse0, Mouse1 등) 및 None 입력 제외
+                if (key >= KeyCode.Mouse0 && key <= KeyCode.Mouse6)
+                    continue;
+
                 SaveNewKey(key);
                 break;
             }
@@ -153,10 +156,17 @@ public class KeyUI : MonoBehaviour
     {
         if (kkey == null) return;
 
-        if (key == KeyCode.Escape) kkey.text = "ESC";
-        else if (key == KeyCode.Return) kkey.text = "ENTER";
-        else if (key == KeyCode.Space) kkey.text = "SPACE BAR";
-        else kkey.text = key.ToString();
+        switch (key)
+        {
+            case KeyCode.UpArrow: kkey.text = "↑"; break; 
+            case KeyCode.DownArrow: kkey.text = "↓"; break; 
+            case KeyCode.LeftArrow: kkey.text = "←"; break; 
+            case KeyCode.RightArrow: kkey.text = "→"; break; 
+            case KeyCode.Escape: kkey.text = "ESC"; break;
+            case KeyCode.Return: kkey.text = "ENTER"; break;
+            case KeyCode.Space: kkey.text = "SPACE"; break;
+            default: kkey.text = key.ToString(); break;
+        }
     }
 
 
@@ -191,6 +201,14 @@ public class KeyUI : MonoBehaviour
         
         keyText.SetActive(true);
         
+    }
+    public void RefreshKeyUI()
+    {
+        if (SettingManager.Instance != null)
+        {
+            keyManager = SettingManager.Instance.keyManager;
+        }
+        UpdateUITextFromKeyManager();
     }
 
     private IEnumerator BlinkGuideText()
