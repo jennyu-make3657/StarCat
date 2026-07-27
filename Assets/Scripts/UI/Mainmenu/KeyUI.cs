@@ -60,13 +60,27 @@ public class KeyUI : MonoBehaviour
         KeyCode currentKey = KeyCode.None;
         switch (keyType)
         {
-            case KeyType.Up: currentKey = keyManager.upKey; break;
-            case KeyType.Down: currentKey = keyManager.downKey; break;
-            case KeyType.Left: currentKey = keyManager.leftKey; break;
-            case KeyType.Right: currentKey = keyManager.rightKey; break;
-            case KeyType.SpecialAction: currentKey = keyManager.specialActionKey; break;
-            case KeyType.Confirm: currentKey = keyManager.confirmKey; break;
-            case KeyType.SkipPause: currentKey = keyManager.skipPauseKey; break;
+            case KeyType.Up: 
+                currentKey = PlayerPrefs.HasKey("UP") ? keyManager.upKey : keyManager.upKey1;
+                break;
+            case KeyType.Down:
+                currentKey = PlayerPrefs.HasKey("DOWN") ? keyManager.downKey : keyManager.downKey1;
+                break;
+            case KeyType.Left:
+                currentKey = PlayerPrefs.HasKey("LEFT") ? keyManager.leftKey : keyManager.leftKey1;
+                break;
+            case KeyType.Right:
+                currentKey = PlayerPrefs.HasKey("RIGHT") ? keyManager.rightKey : keyManager.rightKey1;
+                break;
+            case KeyType.SpecialAction: 
+                currentKey = keyManager.specialActionKey;
+                break;
+            case KeyType.Confirm: 
+                currentKey = keyManager.confirmKey; 
+                break;
+            case KeyType.SkipPause: 
+                currentKey = keyManager.skipPauseKey; 
+                break;
         }
 
         UpdateKeyTextDisplay(currentKey);

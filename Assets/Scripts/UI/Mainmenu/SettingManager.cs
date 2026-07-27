@@ -5,7 +5,7 @@ using UnityEngine.Rendering;
 public class SettingManager : MonoBehaviour
 {
     public static SettingManager Instance { get; private set; }
-    [Header("설정 스크립트")]
+    [Header("Option Script")]
     public Option option; //전체화면,해상도 담당 스크립트
     public KeyManager keyManager; //키 설정 담당
     public BGMVolume bgmVolume;//배경음 설정 담당
@@ -102,11 +102,10 @@ public class SettingManager : MonoBehaviour
             Debug.LogError("KeyManager가 연결되지 않았습니다.");
             return;
         }
-        keyManager.upKey = ParseKey(UP_KEY, KeyCode.UpArrow);
-        keyManager.downKey = ParseKey(DOWN_KEY, KeyCode.DownArrow);
-        keyManager.leftKey = ParseKey(LEFT_KEY, KeyCode.LeftArrow);
-        keyManager.rightKey = ParseKey(RIGHT_KEY, KeyCode.RightArrow);
-
+        keyManager.upKey = ParseKey(UP_KEY, KeyCode.W);
+        keyManager.downKey = ParseKey(DOWN_KEY, KeyCode.S);
+        keyManager.leftKey = ParseKey(LEFT_KEY, KeyCode.A);
+        keyManager.rightKey = ParseKey(RIGHT_KEY, KeyCode.D);
         keyManager.specialActionKey = ParseKey(SPECIAL_KEY, KeyCode.Space);
         keyManager.confirmKey = ParseKey(CONFIRM_KEY, KeyCode.Return);
         keyManager.skipPauseKey = ParseKey(SKIP_KEY, KeyCode.Escape);

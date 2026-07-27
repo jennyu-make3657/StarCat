@@ -18,7 +18,7 @@ public class PlayerMove: MonoBehaviour
         float v = Input.GetAxisRaw("Vertical"); */ //기존입력방식(커스텀키 설정을 적용하기 위해 수정)
         float h = 0f;
         float v= 0f; //초기화
-
+        //화살표키+WASD(커스텀키 설정 적용) 입력 체크
         if (SettingManager.Instance != null && SettingManager.Instance.keyManager != null)
         {
             KeyManager keyManager = SettingManager.Instance.keyManager;

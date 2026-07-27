@@ -7,8 +7,9 @@ public class BGMVolume : MonoBehaviour
     public Color fillColor = Color.black;
     public Color emptyColor = Color.white;
     [SerializeField]
-    private int currentVolume = 6; //private로 변경하여 외부에서 직접 접근 차단.
-                                   //무조건 SetVolume()을 통해서만 변경되도록 유도.
+    private int currentVolume = 6; 
+    //private로 변경하여 외부에서 직접 접근 차단.
+    //무조건 SetVolume()을 통해서만 변경되도록 유도.
 
     public GameObject volumepanel;
     public Toggle BGMtoggle;
@@ -19,10 +20,7 @@ public class BGMVolume : MonoBehaviour
         VolumeNemo();
         */
         // SettingManager가 Start()의 LoadSetting()에서
-        // PlayerPrefs의 값을 불러와 SetVolume()을 통해
-        // 최종 적용하므로 여기서 중복으로 불러오지 않음.
-        //
-        // 설정값의 Load와 적용은 SettingManager가 담당
+        // PlayerPrefs의 값을 불러와 SetVolume()을 통해 처리
     }
 
     public void SetVolume(int volume)

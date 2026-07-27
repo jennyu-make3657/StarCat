@@ -21,11 +21,11 @@ public class KeyManager : MonoBehaviour
     public KeyCode skipPauseKey = KeyCode.Escape;
     private void Awake()
     {
-        // 싱글톤 패턴 설정
+        
         if (Instance == null)
         {
             Instance = this;
-            // 씬이 변경되어도 키 매니저 파괴 방지 (필요 시 주석 해제)
+            
             // DontDestroyOnLoad(gameObject);
         }
         else

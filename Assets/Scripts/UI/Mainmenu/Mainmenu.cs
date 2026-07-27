@@ -66,7 +66,7 @@ public class Mainmenu : MonoBehaviour
     {
         // Load the scene corresponding to the selected chapter
         // Example: SceneManager.LoadScene("Chapter" + chapterNumber);
-        string sceneName = "Stage" + chapterNumber; //우리가 챕터를 Stage1, Stage2, Stage3... 이런식으로 만들었기 때문에 이렇게 씀 Chapter 1이 아니라
+        string sceneName = "Stage" + chapterNumber; //챕터 씬 이름 Stage1, Stage2, Stage3... 
         SceneManager.LoadScene(sceneName);
     }
 
